@@ -1,0 +1,19 @@
+{
+    "name": "p21sistemas/log",
+    "description": "Log de operacoes de banco de dados e arquivos",
+    "authors": [
+        {
+            "name": "P21 Sistemas",
+            "email": "github@p21sistemas.com.br"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.5.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Log": "src/Log"
+        }
+    }
+}

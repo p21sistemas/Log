@@ -1,0 +1,14 @@
+<?php echo $this->displayMessage(); ?>
+<div data-collapsed="0" class="panel panel-show">
+	<div class="panel-heading">
+		<div class="panel-title">Logs</div>
+	</div>
+	<div class="panel-body">
+		<div id="dataTable"></div>
+	</div>
+</div>
+<script>
+$(document).ready(function() {
+    $('#dataTable').zfTable();
+});
+</script>

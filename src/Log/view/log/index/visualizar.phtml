@@ -1,0 +1,113 @@
+<?php 
+
+echo $this->displayMessage();
+
+
+function tratarObjeto($valor)
+{
+    if(is_object($valor)) {
+        
+        if($valor instanceof \Datetime) {
+            return get_class($valor) . ' - ' . $valor->format('d/m/Y');
+        } else {
+            return get_class($valor) . ' - ' . $valor->getId();
+        }
+    }else {
+        return $valor;   
+    } 
+}
+?>
+
+<div data-collapsed="0" class="panel panel-show">
+	<div class="panel-heading">
+		<div class="panel-title">
+			Log
+			<div class="pull-right">
+	            <?php echo $this->link('log/default', array( 'controller' => 'index'), array('class' => 'btn btn-sm btn-info', 'class_i' => 'fa fa-arrow-left', 'value' => 'Voltar')); ?>
+	        </div>
+    	</div>
+	</div>
+	<div class="panel-body">
+        
+        <div class="portlet-body">
+            <div class="table-toolbar"></div>
+            
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Mensagem</th>
+                        <th>Local</th>
+                        <th>IP</th>
+                        <th>Usuário</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><?php echo $this->log->getTipo(); ?></td>
+                        <td><?php echo $this->log->getMensagem(); ?></td>
+                        <td><?php echo str_replace("Controller\\", "", $this->log->getRoute()); ?></td>
+                        <td><?php echo $this->log->getIp(); ?></td>
+                        <td><?php echo $this->log->getUsuario()->getNome(); ?></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">CAMPOS</div>
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="col-md-1">Chave</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($this->log->getCampos() as $campo): ?>
+                            <tr>
+                                <td><?php echo $campo->getChave(); ?></td>
+                                <td>
+                                <?php 
+                                
+                                if(\Application\Resources\Sdt21::isSerial($campo->getValor())) {
+                                    if($campo->getChave() == 'parcial') { ?>
+                                        <table class="table table-striped table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th width="33%">Campo</th>
+                                                    <th width="33%">Antes</th>
+                                                    <th width="33%">Depois</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                        <?php foreach (unserialize($campo->getValor()) as $campo => $valor) : ?>
+
+                                                <tr>
+                                                    <td><?php echo $campo; ?></td>
+                                                    <td><?php echo tratarObjeto($valor[0]); ?></td>
+                                                    <td><?php echo tratarObjeto($valor[1]); ?></td>
+                                                </tr>
+                                        <?php endforeach; ?>                                 
+                                            </tbody>
+                                        </table>
+                                    <?php } else {
+                                        echo "<pre>";
+                                        print_r( unserialize($campo->getValor()) );
+                                        echo "</pre>";
+                                    }
+                                } else {
+                                    echo $campo->getValor();
+                                }
+                                
+                                ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
